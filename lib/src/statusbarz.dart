@@ -19,7 +19,6 @@ class Statusbarz {
 
   static final GlobalKey _key = GlobalKey();
   static final Statusbarz _instance = Statusbarz._constructor();
-  static final StatusbarzObserver _observer = StatusbarzObserver();
 
   StatusbarzTheme _theme = StatusbarzTheme();
 
@@ -47,7 +46,6 @@ class Statusbarz {
   ///   );
   /// }
   /// ```
-  StatusbarzObserver get observer => _observer;
 
   set setDefaultDelay(Duration delay) => _defaultDelay = delay;
 
