@@ -1,5 +1,6 @@
 // ignore_for_file: use_setters_to_change_properties, avoid_setters_without_getters, comment_references
 
+import 'dart:ffi';
 import 'dart:ui';
 
 import 'package:flutter/material.dart' hide Image;
@@ -113,7 +114,13 @@ class Statusbarz {
         for (var yCoord = 0; yCoord < statusHeight.toInt(); yCoord++) {
           for (var xCoord = 0; xCoord < bitmap!.width; xCoord++) {
             final pixel = bitmap.getPixel(xCoord, yCoord);
-            luminance += pixel.luminance;
+
+            // Formule pour trouver la luminance https://www.itu.int/dms_pubrec/itu-r/rec/bt/R-REC-BT.709-6-201506-I!!PDF-F.pdf
+            final red = (pixel >> 16) & 0xFF;
+            final blue = pixel & 0xFF;
+            final green = (pixel >> 8) & 0xFF;
+            final pixelLuminance = (red * 0.2126) + (green * 0.7152) + (blue * 0.0722);
+            luminance += pixelLuminance;
             pixels++;
           }
         }
