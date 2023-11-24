@@ -16,9 +16,9 @@ import 'package:statusbarz/src/statusbarz_theme.dart';
 /// {@endtemplate}
 class Statusbarz {
   Statusbarz._constructor();
+
   static final GlobalKey _key = GlobalKey();
   static final Statusbarz _instance = Statusbarz._constructor();
-  static final StatusbarzObserver _observer = StatusbarzObserver();
 
   StatusbarzTheme _theme = StatusbarzTheme();
 
@@ -46,7 +46,6 @@ class Statusbarz {
   ///   );
   /// }
   /// ```
-  StatusbarzObserver get observer => _observer;
 
   set setDefaultDelay(Duration delay) => _defaultDelay = delay;
 
@@ -91,15 +90,13 @@ class Statusbarz {
             'No StatusbarzObserver found from widget tree. StatusbarzObserver shall be added above MaterialApp in your widget tree.',
           );
         }
-        final view = View.of(context);
 
         /// Finds currently rendered UI
-        final boundary = context.findRenderObject() as RenderRepaintBoundary?;
+        RenderRepaintBoundary? boundary = context.findRenderObject() as RenderRepaintBoundary?;
 
         /// Converts rendered UI to png
         final capturedImage = await boundary!.toImage();
-        final byteData =
-            await capturedImage.toByteData(format: ImageByteFormat.png);
+        final byteData = await capturedImage.toByteData(format: ImageByteFormat.png);
         final bytes = byteData!.buffer.asUint8List();
 
         final bitmap = img.decodeImage(bytes);
@@ -108,7 +105,8 @@ class Statusbarz {
         var pixels = 0;
         //final window = WidgetsBinding.instance.window;
 
-        final mediaQuery = MediaQueryData.fromView(view);
+        final window = WidgetsBinding.instance.window;
+        final mediaQuery = MediaQueryData.fromWindow(window);
         final statusHeight = mediaQuery.padding.top.clamp(20.0, 150.0);
 
         /// Calculates the average color for the status bar
