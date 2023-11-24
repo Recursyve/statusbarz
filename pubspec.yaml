@@ -7,7 +7,7 @@ repository: https://github.com/Mankeli-Software/statusbarz
 issue_tracker: https://github.com/Mankeli-Software/statusbarz/issues
 
 environment:
-  sdk: '>=3.0.5 <4.0.0'
+  sdk: '>=2.16.0 <4.0.0'
   flutter: '>=1.17.0'
 
 dependencies:
