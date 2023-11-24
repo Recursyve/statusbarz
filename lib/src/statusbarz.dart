@@ -124,8 +124,8 @@ class Statusbarz {
             pixels++;
           }
         }
-
-        final avgLuminance = luminance / pixels;
+        // On divise par 255 pour normaliser la luminance de 0 à 1
+        final avgLuminance = luminance / (255 * pixels);
 
         /// Updates status bar color
         if (avgLuminance > 0.5) {
