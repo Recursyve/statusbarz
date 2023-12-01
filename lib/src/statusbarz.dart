@@ -112,7 +112,7 @@ class Statusbarz {
         final mediaQuery = MediaQueryData.fromView(view);
         final statusHeight = mediaQuery.padding.top.clamp(20.0, 150.0);
         // We assume height is at least more than 150 pixel
-        final navbarHeight = (mediaQuery.size.height - mediaQuery.padding.bottom.clamp(20, 150)).round();
+        final navbarHeight = (mediaQuery.size.height - mediaQuery.padding.bottom.clamp(50, 150)).round() - 30;
 
         /// Calculates the average color for the status bar
         for (var yCoord = 0; yCoord < statusHeight.toInt(); yCoord++) {
