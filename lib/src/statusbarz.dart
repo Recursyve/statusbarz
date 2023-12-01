@@ -111,7 +111,8 @@ class Statusbarz {
 
         final mediaQuery = MediaQueryData.fromView(view);
         final statusHeight = mediaQuery.padding.top.clamp(20.0, 150.0);
-        final navbarHeight = mediaQuery.padding.bottom.clamp(20, 150);
+        // We assume height is at least more than 150 pixel
+        final navbarHeight = (mediaQuery.size.height - mediaQuery.padding.bottom.clamp(20, 150)).round();
 
         /// Calculates the average color for the status bar
         for (var yCoord = 0; yCoord < statusHeight.toInt(); yCoord++) {
@@ -122,25 +123,59 @@ class Statusbarz {
           }
         }
 
-        final avgLuminance = topOfScreenLuminance / numberOfTopScreenPixels;
-
-        /// Updates status bar color
-        if (avgLuminance > 0.5) {
-          setDarkStatusBar();
-        } else {
-          setLightStatusBar();
+        /// Calulates the average color for the navigation bar
+        for (var yCoord = mediaQuery.size.height.round(); yCoord > navbarHeight.toInt(); yCoord--) {
+          for (var xCoord = 0; xCoord < bitmap!.width; xCoord++) {
+            final pixel = bitmap.getPixel(xCoord, yCoord);
+            bottomOfScreenLumiance += pixel.luminance;
+            numberOfBottomScreenPixels++;
+          }
         }
+
+        final topOfScreenAvgLuminance = topOfScreenLuminance / numberOfTopScreenPixels;
+        final bottomOfScreenAvgLuminance = bottomOfScreenLumiance / numberOfBottomScreenPixels;
+
+        setSystemUIOverlayStyle(
+          isStatusBarDark: topOfScreenAvgLuminance < 0.5,
+          isNavigationBarDark: bottomOfScreenAvgLuminance < 0.5,
+        );
       },
     );
   }
 
-  /// Changes the text and icon color on the statusbar to a dark color
-  void setDarkStatusBar() {
-    SystemChrome.setSystemUIOverlayStyle(theme.darkStatusBar);
-  }
+  void setSystemUIOverlayStyle({
+    required bool isStatusBarDark,
+    required bool isNavigationBarDark,
+  }) {
+    final systemNavigationBarColor =
+        isNavigationBarDark ? theme.darkStyle.systemNavigationBarColor : theme.lightStyle.systemNavigationBarColor;
+    final systemNavigationBarDividerColor =
+        isNavigationBarDark ? theme.darkStyle.systemNavigationBarColor : theme.lightStyle.systemNavigationBarColor;
+    final systemNavigationBarIconBrightness = isNavigationBarDark
+        ? theme.darkStyle.systemNavigationBarIconBrightness
+        : theme.lightStyle.systemNavigationBarIconBrightness;
+    final systemNavigationBarContrastEnforced = isNavigationBarDark
+        ? theme.darkStyle.systemNavigationBarContrastEnforced
+        : theme.lightStyle.systemNavigationBarContrastEnforced;
+    final statusBarColor = isStatusBarDark ? theme.darkStyle.statusBarColor : theme.lightStyle.statusBarColor;
+    final statusBarBrightness =
+        isStatusBarDark ? theme.darkStyle.statusBarBrightness : theme.lightStyle.statusBarBrightness;
+    final statusBarIconBrightness =
+        isStatusBarDark ? theme.darkStyle.statusBarIconBrightness : theme.lightStyle.statusBarIconBrightness;
+    final systemStatusBarContrastEnforced = isStatusBarDark
+        ? theme.darkStyle.systemStatusBarContrastEnforced
+        : theme.lightStyle.systemStatusBarContrastEnforced;
 
-  /// Changes the text and icon color on the statusbar to a light color
-  void setLightStatusBar() {
-    SystemChrome.setSystemUIOverlayStyle(theme.lightStatusBar);
+    final overlayStyle = SystemUiOverlayStyle(
+      systemNavigationBarColor: systemNavigationBarColor,
+      systemNavigationBarDividerColor: systemNavigationBarDividerColor,
+      systemNavigationBarIconBrightness: systemNavigationBarIconBrightness,
+      systemNavigationBarContrastEnforced: systemNavigationBarContrastEnforced,
+      statusBarColor: statusBarColor,
+      statusBarBrightness: statusBarBrightness,
+      statusBarIconBrightness: statusBarIconBrightness,
+      systemStatusBarContrastEnforced: systemStatusBarContrastEnforced,
+    );
+    SystemChrome.setSystemUIOverlayStyle(overlayStyle);
   }
 }

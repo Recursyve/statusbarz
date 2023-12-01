@@ -7,14 +7,14 @@ import 'package:flutter/services.dart';
 class StatusbarzTheme {
   /// {@macro statusbarz_theme}
   StatusbarzTheme({
-    this.darkStatusBar = const SystemUiOverlayStyle(
+    this.darkStyle = const SystemUiOverlayStyle(
       systemNavigationBarColor: Colors.white,
       systemNavigationBarIconBrightness: Brightness.dark,
       statusBarColor: Colors.transparent,
       statusBarBrightness: Brightness.light,
       statusBarIconBrightness: Brightness.dark,
     ),
-    this.lightStatusBar = const SystemUiOverlayStyle(
+    this.lightStyle = const SystemUiOverlayStyle(
       systemNavigationBarColor: Colors.black,
       systemNavigationBarIconBrightness: Brightness.light,
       statusBarColor: Colors.transparent,
@@ -34,7 +34,7 @@ class StatusbarzTheme {
   ///    statusBarIconBrightness: Brightness.dark,
   ///  )
   /// ```
-  final SystemUiOverlayStyle darkStatusBar;
+  final SystemUiOverlayStyle darkStyle;
 
   /// The `SystemUiOverlayStyle` to apply when the background behind status bar is dark. This shall
   /// use light icons etc. Defaults to:
@@ -47,5 +47,5 @@ class StatusbarzTheme {
   ///    statusBarIconBrightness: Brightness.light,
   ///  )
   /// ```
-  final SystemUiOverlayStyle lightStatusBar;
+  final SystemUiOverlayStyle lightStyle;
 }
