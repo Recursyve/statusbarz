@@ -91,9 +91,10 @@ class Statusbarz {
             'No StatusbarzObserver found from widget tree. StatusbarzObserver shall be added above MaterialApp in your widget tree.',
           );
         }
+        final view = View.of(context);
 
         /// Finds currently rendered UI
-        RenderRepaintBoundary? boundary = context.findRenderObject() as RenderRepaintBoundary?;
+        final boundary = context.findRenderObject() as RenderRepaintBoundary?;
 
         /// Converts rendered UI to png
         final capturedImage = await boundary!.toImage();
@@ -102,30 +103,26 @@ class Statusbarz {
 
         final bitmap = img.decodeImage(bytes);
 
-        var luminance = 0.0;
-        var pixels = 0;
-        //final window = WidgetsBinding.instance.window;
+        double topOfScreenLuminance = 0.0;
+        int numberOfTopScreenPixels = 0;
 
-        final window = WidgetsBinding.instance.window;
-        final mediaQuery = MediaQueryData.fromWindow(window);
+        double bottomOfScreenLumiance = 0.0;
+        int numberOfBottomScreenPixels = 0;
+
+        final mediaQuery = MediaQueryData.fromView(view);
         final statusHeight = mediaQuery.padding.top.clamp(20.0, 150.0);
+        final navbarHeight = mediaQuery.padding.bottom.clamp(20, 150);
 
         /// Calculates the average color for the status bar
         for (var yCoord = 0; yCoord < statusHeight.toInt(); yCoord++) {
           for (var xCoord = 0; xCoord < bitmap!.width; xCoord++) {
             final pixel = bitmap.getPixel(xCoord, yCoord);
-
-            // Formule pour trouver la luminance https://www.itu.int/dms_pubrec/itu-r/rec/bt/R-REC-BT.709-6-201506-I!!PDF-F.pdf
-            final red = (pixel >> 16) & 0xFF;
-            final blue = pixel & 0xFF;
-            final green = (pixel >> 8) & 0xFF;
-            final pixelLuminance = (red * 0.2126) + (green * 0.7152) + (blue * 0.0722);
-            luminance += pixelLuminance;
-            pixels++;
+            topOfScreenLuminance += pixel.luminance;
+            numberOfTopScreenPixels++;
           }
         }
-        // On divise par 255 pour normaliser la luminance de 0 à 1
-        final avgLuminance = luminance / (255 * pixels);
+
+        final avgLuminance = topOfScreenLuminance / numberOfTopScreenPixels;
 
         /// Updates status bar color
         if (avgLuminance > 0.5) {
