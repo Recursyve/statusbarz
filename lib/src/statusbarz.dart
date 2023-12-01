@@ -124,7 +124,7 @@ class Statusbarz {
         }
 
         /// Calulates the average color for the navigation bar
-        for (var yCoord = mediaQuery.size.height.round(); yCoord > navbarHeight.toInt(); yCoord--) {
+        for (var yCoord = navbarHeight.toInt(); yCoord > navbarHeight.toInt() - 30; yCoord--) {
           for (var xCoord = 0; xCoord < bitmap!.width; xCoord++) {
             final pixel = bitmap.getPixel(xCoord, yCoord);
             bottomOfScreenLumiance += pixel.luminance;
@@ -132,8 +132,8 @@ class Statusbarz {
           }
         }
 
-        final topOfScreenAvgLuminance = topOfScreenLuminance / numberOfTopScreenPixels;
-        final bottomOfScreenAvgLuminance = bottomOfScreenLumiance / numberOfBottomScreenPixels;
+        final topOfScreenAvgLuminance = topOfScreenLuminance / (numberOfTopScreenPixels * 255);
+        final bottomOfScreenAvgLuminance = bottomOfScreenLumiance / (numberOfBottomScreenPixels * 255);
 
         setSystemUIOverlayStyle(
           isStatusBarDark: topOfScreenAvgLuminance < 0.5,
