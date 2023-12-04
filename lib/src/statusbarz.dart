@@ -118,7 +118,7 @@ class Statusbarz {
         for (var yCoord = 0; yCoord < statusHeight.toInt(); yCoord++) {
           for (var xCoord = 0; xCoord < bitmap!.width; xCoord++) {
             final pixel = bitmap.getPixel(xCoord, yCoord);
-            topOfScreenLuminance += pixel.luminance;
+            topOfScreenLuminance += pixel.luminanceNormalized;
             numberOfTopScreenPixels++;
           }
         }
@@ -127,13 +127,13 @@ class Statusbarz {
         for (var yCoord = navbarHeight.toInt(); yCoord > navbarHeight.toInt() - 30; yCoord--) {
           for (var xCoord = 0; xCoord < bitmap!.width; xCoord++) {
             final pixel = bitmap.getPixel(xCoord, yCoord);
-            bottomOfScreenLumiance += pixel.luminance;
+            bottomOfScreenLumiance += pixel.luminanceNormalized;
             numberOfBottomScreenPixels++;
           }
         }
 
-        final topOfScreenAvgLuminance = topOfScreenLuminance / (numberOfTopScreenPixels * 255);
-        final bottomOfScreenAvgLuminance = bottomOfScreenLumiance / (numberOfBottomScreenPixels * 255);
+        final topOfScreenAvgLuminance = topOfScreenLuminance / (numberOfTopScreenPixels);
+        final bottomOfScreenAvgLuminance = bottomOfScreenLumiance / (numberOfBottomScreenPixels);
 
         setSystemUIOverlayStyle(
           isStatusBarDark: topOfScreenAvgLuminance < 0.5,
