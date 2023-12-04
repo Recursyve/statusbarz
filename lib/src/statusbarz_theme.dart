@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 /// {@template statusbarz_theme}
 /// The default theme for the `Statusbarz`
 /// {@endtemplate}
-class StatusbarzTheme {
+class StatusbarzTheme extends ThemeExtension<StatusbarzTheme> {
   /// {@macro statusbarz_theme}
   StatusbarzTheme({
     this.darkStyle = const SystemUiOverlayStyle(
@@ -48,4 +48,20 @@ class StatusbarzTheme {
   ///  )
   /// ```
   final SystemUiOverlayStyle lightStyle;
+
+  @override
+  ThemeExtension<StatusbarzTheme> copyWith({
+    SystemUiOverlayStyle? darkStyle,
+    SystemUiOverlayStyle? lightStyle,
+  }) {
+    return StatusbarzTheme(
+      darkStyle: darkStyle ?? this.darkStyle,
+      lightStyle: lightStyle ?? this.lightStyle,
+    );
+  }
+
+  @override
+  ThemeExtension<StatusbarzTheme> lerp(covariant ThemeExtension<StatusbarzTheme>? other, double t) {
+    throw UnimplementedError();
+  }
 }
